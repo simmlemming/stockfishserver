@@ -31,11 +31,11 @@ class StockfishRouter(BaseHTTPRequestHandler):
         try:
             body = sf_method(*args)
         except Exception as e:
-            print(f"stockfish error = {str(e)}.")
+            print(f"stockfish error = {str(e)}")
             self.do_send_text_response(500, str(e))
             raise e
 
-        print(f"stockfish response = {body}.")
+        print(f"stockfish response = {body}")
         self.do_send_text_response(200, str(body))
 
     def read_body(self):
