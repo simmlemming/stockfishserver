@@ -1,0 +1,8 @@
+curl -XPOST \
+-H "Content-type: application/json" \
+-d '
+{
+    "method": "set_position",
+    "args": [["e2e4", "e7e5"]]
+}' \
+http://127.0.0.1:8080/call
