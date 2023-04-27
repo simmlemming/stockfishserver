@@ -25,5 +25,11 @@ class Stockfish:
   a   b   c   d   e   f   g   h
         """
 
+    def get_top_moves(self, number):
+        return f"Get top moves, number = {number}."
+
+    def get_top_moves_2(self, number1, number2):
+        return f"Get top moves, number1 = {number1}, number2 = {number2}."
+
     def set_position(self, moves):
         return f"Moves were {moves}."

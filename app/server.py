@@ -12,24 +12,31 @@ class StockfishRouter(BaseHTTPRequestHandler):
         request_body = self.read_body()
 
         if not request_body:
-            self.do_send_text_response(500, f"Cannot read request body: {str(request_body)}")
+            self.do_send_text_response(500, f"Cannot read request body: {str(request_body)}.")
             return
 
         if "method" not in request_body:
-            self.do_send_text_response(500, f"'method' not found")
+            self.do_send_text_response(500, f"'method' not found.")
             return
 
         sf_method_name = request_body["method"]
         sf_method = getattr(sf, sf_method_name, None)
 
         if not sf_method:
-            self.do_send_text_response(500, f"Invalid method: {str(sf_method_name)}")
+            self.do_send_text_response(500, f"Invalid method: '{str(sf_method_name)}'.")
             return
 
         args = request_body.get("args", {})
-        body = sf_method(*args)
+        print(f"stockfish.{sf_method_name}(), args = {args}")
+        try:
+            body = sf_method(*args)
+        except Exception as e:
+            print(f"stockfish error = {str(e)}.")
+            self.do_send_text_response(500, str(e))
+            raise e
 
-        self.do_send_text_response(200, body)
+        print(f"stockfish response = {body}.")
+        self.do_send_text_response(200, str(body))
 
     def read_body(self):
         if self.headers.get("Content-Type") == "application/json":
