@@ -6,24 +6,25 @@ class StockfishRouter(BaseHTTPRequestHandler):
 
     def do_POST(self):
         if self.path != '/call':
-            self.do_send_text_response(500, f"Invalid path.")
+            self.do_send_text_error(500, f"Invalid path.")
             return
 
         request_body = self.read_body()
+        print(request_body)
 
         if not request_body:
-            self.do_send_text_response(500, f"Cannot read request body: {str(request_body)}.")
+            self.do_send_text_error(500, f"Cannot read request body: {str(request_body)}.")
             return
 
         if "method" not in request_body:
-            self.do_send_text_response(500, f"'method' not found.")
+            self.do_send_text_error(500, f"'method' not found.")
             return
 
         sf_method_name = request_body["method"]
         sf_method = getattr(sf, sf_method_name, None)
 
         if not sf_method:
-            self.do_send_text_response(500, f"Invalid method: '{str(sf_method_name)}'.")
+            self.do_send_text_error(500, f"Invalid method: '{str(sf_method_name)}'.")
             return
 
         args = request_body.get("args", {})
@@ -32,7 +33,7 @@ class StockfishRouter(BaseHTTPRequestHandler):
             body = sf_method(*args)
         except Exception as e:
             print(f"stockfish error = {str(e)}")
-            self.do_send_text_response(500, str(e))
+            self.do_send_text_error(500, str(e))
             raise e
 
         print(f"stockfish response = {body}")
@@ -43,6 +44,10 @@ class StockfishRouter(BaseHTTPRequestHandler):
             length = int(self.headers.get("Content-Length"))
             return json.loads(self.rfile.read(length).decode("utf-8"))
         return None
+
+    def do_send_text_error(self, code, message):
+        self.do_send_text_response(code, message)
+        # self.send_error(code, message)
 
     def do_send_text_response(self, code, body):
         self.send_response(code)
@@ -60,6 +65,9 @@ sf = None
 def start_server(stockfish):
     global sf
     sf = stockfish
+
+    parameters = stockfish.get_parameters()
+    print(json.dumps(parameters, indent=4))
 
     server = HTTPServer(("0.0.0.0", 8080), StockfishRouter)
     try:

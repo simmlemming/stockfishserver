@@ -12,4 +12,4 @@ if __name__ == '__main__':
     else:
         from stockfish import Stockfish
 
-    start_server(Stockfish(args.stockfish_bin))
+    start_server(Stockfish(path=args.stockfish_bin, parameters={"Threads": 6, "Hash": 4048}))

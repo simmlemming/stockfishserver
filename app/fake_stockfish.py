@@ -1,6 +1,6 @@
 class Stockfish:
 
-    def __init__(self, path):
+    def __init__(self, path, parameters=None):
         pass
 
     def get_board_visual(self):
@@ -33,3 +33,6 @@ class Stockfish:
 
     def set_position(self, moves):
         return f"Moves were {moves}."
+
+    def get_parameters(self):
+        return "{}"

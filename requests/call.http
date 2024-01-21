@@ -1,0 +1,8 @@
+curl -XPOST \
+-H "Content-type: application/json" \
+-d "
+{
+    \"method\": \"$1\",
+    \"args\": $2
+}" \
+http://127.0.0.1:8080/call

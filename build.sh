@@ -1,1 +1,1 @@
-docker build --tag  stockfish:0.2 --platform linux/amd64 .
+docker build --tag  stockfish:0.3 --platform linux/amd64 .

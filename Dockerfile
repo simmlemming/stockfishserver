@@ -7,4 +7,4 @@ WORKDIR /app
 COPY stockfish-ubuntu-20.04-x86-64 .
 COPY app .
 
-CMD ["python3", "main.py", "--stockfish-bin", "./stockfish-ubuntu-20.04-x86-64"]
+CMD ["python3", "-u", "main.py", "--stockfish-bin", "./stockfish-ubuntu-20.04-x86-64"]
