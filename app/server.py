@@ -1,5 +1,6 @@
 import json
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from termcolor import colored
 
 
 class StockfishRouter(BaseHTTPRequestHandler):
@@ -10,7 +11,8 @@ class StockfishRouter(BaseHTTPRequestHandler):
             return
 
         request_body = self.read_body()
-        print(request_body)
+        print("")
+        print(colored(f"> {request_body}", "light_green"))
 
         if not request_body:
             self.do_send_text_error(500, f"Cannot read request body: {str(request_body)}.")
@@ -28,15 +30,15 @@ class StockfishRouter(BaseHTTPRequestHandler):
             return
 
         args = request_body.get("args", {})
-        print(f"stockfish.{sf_method_name}(), args = {args}")
+        # print(f"stockfish.{sf_method_name}(), args = {args}")
         try:
             body = sf_method(*args)
         except Exception as e:
-            print(f"stockfish error = {str(e)}")
+            print(colored(f"stockfish error = {str(e)}", "red"))
             self.do_send_text_error(500, str(e))
             raise e
 
-        print(f"stockfish response = {body}")
+        print(colored(f"< {body}", "light_grey"))
         self.do_send_text_response(200, str(body))
 
     def read_body(self):
@@ -66,12 +68,12 @@ def start_server(stockfish):
     global sf
     sf = stockfish
 
-    parameters = stockfish.get_parameters()
-    print(json.dumps(parameters, indent=4))
-
     server = HTTPServer(("0.0.0.0", 8080), StockfishRouter)
     try:
-        print(f"Starting on {server.server_address}...")
+        print(colored(f"Starting on {server.server_address}...", "light_green"))
+
+        parameters = stockfish.get_parameters()
+        print(colored(json.dumps(parameters, indent=4), "dark_grey"))
         server.serve_forever()
     except KeyboardInterrupt:
         pass
