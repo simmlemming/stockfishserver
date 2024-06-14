@@ -1,0 +1,12 @@
+name: gaided
+
+services:
+  board:
+    image: stockfish:0.4
+    ports:
+      - "8080:8080"
+
+  stockfish-engine:
+    image: stockfish:0.4
+    ports:
+      - "8081:8080"
